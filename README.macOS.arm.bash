@@ -50,7 +50,6 @@ python_version=$(echo `ls  /opt/homebrew/Cellar/python@3.9/`)
 ln -s /opt/homebrew/Cellar/python@3.9/$python_version/bin/python3.9 /opt/homebrew/bin/python3
 ln -s /opt/homebrew/Cellar/python@3.9/$python_version/bin/pip3.9 /opt/homebrew/bin/pip3
 pip3 install -r python-dependencies.txt
-pip3 install pgdp
 
 brew install pyenv
 pyenv install $python_version
@@ -104,11 +103,22 @@ cat >> ~/.bashrc << EOF
 ulimit -n 65536 65536  # Increases the number of open files
 export PGHOST="$(hostname)"
 export LC_CTYPE="en_US.UTF-8"
+
+eval "$(/opt/homebrew/bin/brew shellenv)"
+export LDFLAGS="-L/opt/homebrew/opt/libxml2/lib -L/opt/homebrew/opt/openssl\@3/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/libxml2/include -I/opt/homebrew/opt/openssl\@3/include"
+export LD_LIBRARY_PATH="/Users/$(whoami)/.pyenv/versions/$python_version/lib/"
+export OPENSSL_INCLUDE_DIR="$(brew --prefix openssl)/include"
+export OPENSSL_LIB_DIR="$(brew --prefix openssl)/lib"
+export COORDINATOR_DATA_DIRECTORY=/Users/$(whoami)/workspace/gpdb/gpAux/gpdemo/datadirs/qddir/demoDataDir-1
+export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/opt/openssl\@3/bin/:$PATH"
+
 EOF
+source ~/.bashrc
 
 cat << EOF
 
-================
+===============================================================================
 
 Please source greenplum_path.sh after compiling database, then
 
